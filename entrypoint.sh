@@ -258,7 +258,7 @@ check_file() {
 run() {
   if [[ -n "\${ARGO_AUTH}" && -n "\${ARGO_DOMAIN}" ]]; then
     [[ "\$ARGO_AUTH" =~ TunnelSecret ]] && echo "\$ARGO_AUTH" | sed 's@{@{"@g;s@[,:]@"\0"@g;s@}@"}@g' > tunnel.json && echo -e "tunnel: \$(sed "s@.*TunnelID:\(.*\)}@\1@g" <<< "\$ARGO_AUTH")\ncredentials-file: $PWD/tunnel.json" > tunnel.yml && ./cloudflared tunnel --config tunnel.yml run 2>&1 &
-    [[ \$ARGO_AUTH =~ ^[A-Z0-9a-z]{120,250}$ ]] && ./cloudflared tunnel run --token ${ARGO_AUTH} 2>&1 &
+    [[ \$ARGO_AUTH =~ ^[A-Z0-9a-z=]{120,250}$ ]] && ./cloudflared tunnel run --token ${ARGO_AUTH} 2>&1 &
   else
     ./cloudflared tunnel --no-autoupdate --url http://localhost:8080 2>&1 &
     sleep 5
